@@ -1,0 +1,411 @@
+
+cmd + option + shift + left arr => collapse all
+cmd + option + shift + right arr => expand all
+
+cmd + shift + c => open console
+
+rotate simulator: cmd + left/right arr
+
+Fix Xcode: limits of free developer accounts
+    Open project that have been installed on the same device
+    Project -> Build Settings tab -> search Bundle ID  -> copy to new Project
+
+
+
+1) Shuffle element with random position in an array (using GameplayKit):
+	import GameplayKit
+	var countries: [String]
+	GKRandomSource.sharedRandom().arrayByShufflingObjects(in: countries) as! [String]
+
+2) Get random int number range 0-3:
+	import GameplayKit
+	GKRandomSource.sharedRandom().nextInt(upperBound: 3)
+
+3) Set Title for ActionBar of ViewController
+		title = "title"
+
+   Set Large Title for ActionBar (IOS11)	on/off
+		navigationController?.navigationBar.prefersLargeTitles = true
+		navigationItem.largeTitleDisplayMode = .never
+
+
+
+4) Create Alert notification
+		//there are two kinds of style: .alert, which pops up a message box over the center of the screen, and .actionSheet, which slides options up from the bottom
+		let ac = UIAlertController(title: "title", message: "message", preferredStyle: .alert)
+		//handler - closure, which is some code that it can execute when the button is tapped
+		//methodName must have variable action: UIAlertAction! - methodName(action: UIAlertAction!)
+        ac.addAction(UIAlertAction(title: "Continue", style: .default, handler: methodName))
+		//completion - optional closure that should be executed when the presentation animation has finished
+		present(ac, animated: true, completion: methodName)
+
+5) Display a ViewController
+	 	// 1: try loading the view controller with identifier "Detail" and typecasting it to be DetailViewController (example)
+        if let vc = storyboard?.instantiateViewController(withIdentifier: "Detail") as? DetailViewController {
+            // 2: success! Set its selectedImage property
+            vc.property1 = value1
+            // 3: now push it onto the navigation controller
+            navigationController?.pushViewController(vc, animated: true)
+        }
+
+6) IPHONE X - Hide Home Indicator
+		override var prefersHomeIndicatorAutoHidden: Bool {
+        	return navigationController?.hidesBarsOnTap ?? false        
+    	}       
+
+7) Sharing item to other apps (pro 3)
+		//creates a UIActivityViewController, which is the iOS method of sharing content with other apps and services
+        //activityItems: an array of items you want to share, applicationActivities: an array of any of your own app's services you want to make sure are in the list
+        let vc = UIActivityViewController(activityItems: [imgView.image!], applicationActivities: [])
+        //tells iOS where the activity view controller should be anchored – where it should appear from
+        //On iPhone, activity view controllers automatically take up the full screen, but on iPad they appear as a popover that allows the user to see what they were working on below. This line of code tells iOS to anchor the activity view controller to the right bar button item (our share button), but this only has an effect on iPad – on iPhone it's ignored
+        vc.popoverPresentationController?.barButtonItem = navigationItem.rightBarButtonItem
+        present(vc,animated: true)
+
+        NOTE: remember to set permission in Info.plist:
+        -> Add -> Privacy - Photo Library Additions Usage Description -> String: "We need to save photos you like"
+
+8) Webview (pro 4)
+
+9) Read from file (pro 5)
+		var allWords = [String] ()
+		if let filePath = Bundle.main.path(forResource: "start", ofType: "txt"){
+            if let contentString = try? String(contentsOfFile: filePath){   //try? means "call this code, and if it throws an error just send me back nil instead.
+                allWords = contentString.components(separatedBy: "\n")
+            }
+        }else {
+            allWords = ["silworm"]
+        }
+
+10) Chek spelling (pro 5) isReal(word: String) -> Bool 
+
+11) String length 
+		when you’re working with UIKit, SpriteKit, or any other Apple framework, use utf16.count for the character count. If it’s just your own code - i.e. looping over characters and processing each one individually – then use count instead
+
+12) Hide status bar (bar with time, battery info, operator name,..)
+        override var prefersStatusBarHidden: Bool{
+            return true
+        }
+
+13) Add UIView to ViewController
+         view.addSubview(label1)
+
+14) Tabbar Controller (pro7)
+
+15) JSON utils SwiftyJSON.swift (pro7)
+
+16) UILable with Lines=0 - that means "let this text go over as many lines as it needs
+
+17) Reference to UIView without @IBOutlet in ViewController - view.subviews is an array containing all the UIViews that are currently placed in view controller (pro8)
+        for subview in view.subviews where subview.tag == 1001 {
+            let btn = subview as! UIButton
+            letterButtons.append(btn)
+            btn.addTarget(self, action: #selector(letterTapped), for: .touchUpInside) //addTarget(). This is the code version of Ctrl-dragging in a storyboard and it lets us attach a method to the button click
+        }
+
+18) Loading text file, read it content
+        if let levelFilePath = Bundle.main.path(forResource: "filename", ofType: "txt"){
+            if let levelContent = try? String(contentsOfFile: levelFilePath){
+
+            }
+        }
+
+19) Split String
+        var lines = str.components(separatedBy: "\n")    
+
+20) Join array's element to String
+        var str = lines.joined(separator: "\n")    
+
+21) Get index of obj in array: ex myarray is an [String]()
+         if let position = myarray.index(of: "searchtext"){}
+
+22) String replace
+        let newstr = str.replacingOccurrences(of: "|", with: "")
+
+23) Get length of String
+        str.count
+
+
+24) Loop over array using enumerated() - it's helpful because it passes you each object from an array as part of your loop, as well as that object's position in the array
+    for (index,line) in lines.enumerated(){
+
+    }
+
+25) Async Thread with Grand Central Dispatch (pro 9)
+    //run in the background queue with default quality of service
+    DispatchQueue.global().async { [unowned self] in
+            ....
+    }
+    //If you wanted to specify the user-initiated quality of service rather than use the default queue
+        .userInitiated -  this is the highest priority background thread, and should be used when you want a background thread to do work that is important to keep your user interface working. This priority will ask the system to dedicate nearly all available CPU time to you to get the job done as quickly as possible
+
+        .userInteractive - this should be used to execute tasks requested by the user that they are now waiting for in order to continue using your app. It's not as important as user interactive work – i.e., if the user taps on buttons to do other stuff, that should be executed first – but it is important because you're keeping the user waiting
+
+        .utility - this should be used for long-running tasks that the user is aware of, but not necessarily desperate for now. If the user has requested something and can happily leave it running while they do something else with your app, you should use Utility
+
+        .background -this is for long-running tasks that the user isn't actively aware of, or at least doesn't care about its progress or when it completes
+
+    DispatchQueue.global(qos: .userInitiated).async{ [unowned self] in
+            ....
+    }
+
+26) Back To the Main Thread - it's never OK to do user interface work on the background thread. 
+        if you're on a background thread and want to execute code on the main thread, you need to call async() again:
+        DispatchQueue.main.async { [unowned self] in
+            ....
+        }
+27) Async Thread - Easy GCD using performSelector
+        performSelector(inBackground: #selector(method), with: nil)
+        performSelector(onMainThread: #selector(method), with: nil, waitUntilDone: false)
+
+        tableView.performSelector(onMainThread: #selector(UITableView.reloadData), with: nil, waitUntilDone: false)
+
+
+28) Importing photos with UIImagePickerController (pro10)
+
+        let picker = UIImagePickerController()
+        picker.allowsEditing = true
+        picker.delegate = self      //need to conform UIImagePickerControllerDelegate, UINavigationControllerDelegate
+        picker.sourceType = .camera //source photo from camera
+        present(picker, animated: true)
+
+
+        //when user finish pick a picture - implement UIImagePickerControllerDelegate
+        func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+            guard let image = info[UIImagePickerControllerEditedImage] as? UIImage else {
+                return
+            }
+            
+            let imgName = UUID().uuidString
+            let imgPath = getDocumentDirectory().appendingPathComponent(imgName)
+            
+            if let jpegData = UIImageJPEGRepresentation(image, 80){ //convert the UIImage to an Data object so it can be saved. To do that, we use the UIImageJPEGRepresentation() function, which takes two parameters: the UIImage to convert to JPEG and a quality value between 0 and 100
+                try? jpegData.write(to: imgPath)
+            }
+            
+            
+            dismiss(animated: true)
+        }
+
+29) Generate UUID
+    let id = UUID().uuidString
+
+30) Get app directory    
+    func getDocumentDirectory() -> URL {
+        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+        let documentDirectory = paths[0]
+        return documentDirectory
+    }
+
+31) UserDefault (ios) - Sharepreference (android)   (pro12)
+   
+    Write:
+        let defaults = UserDefaults.standard
+        defaults.set(25, forKey: "Age")
+        defaults.set(true, forKey: "UseTouchID")
+        defaults.set(CGFloat.pi, forKey: "Pi")
+        defaults.set("Paul Hudson", forKey: "Name")
+        defaults.set(Date(), forKey: "LastRun")
+
+        let array = ["Hello", "World"]
+        defaults.set(array, forKey: "SavedArray")
+
+        let dict = ["Name": "Paul", "Country": "UK"]
+        defaults.set(dict, forKey: "SavedDict")
+    Read:
+        integer(forKey:) returns an integer if the key existed, or 0 if not.
+        bool(forKey:) returns a boolean if the key existed, or false if not.
+        float(forKey:) returns a float if the key existed, or 0.0 if not.
+        double(forKey:) returns a double if the key existed, or 0.0 if not.
+        object(forKey:) returns Any? so you need to conditionally typecast it to your data type.
+
+        object: as!, as? , as? ... ?? ..
+        let array = defaults.object(forKey:"SavedArray") as? [String] ?? [String]()
+        let dict = defaults.object(forKey: "SavedDict") as? [String: String] ?? [String: String]()
+
+        rules are very simple:
+        - All your data types must be one of the following: boolean, integer, float, double, string, array, dictionary, Date, or a class that fits rule 2.
+        - If your data type is a class, it must conform to the NSCoding protocol, which is used for archiving object graphs.
+        - If your data type is an array or dictionary, all the keys and values must match rule 1 or rule 2.
+
+    31) a) NSCoding (using for ObjC & Swift) (work only with Class)
+            var people = [Person]()
+            func saveAppData() {
+                let savedData = NSKeyedArchiver.archivedData(withRootObject: people)    // converts our array into an Data object
+                //NOTE:Person must be implement NSCoding protocol to use NSKeyedArchiver
+                
+                let defaults = UserDefaults.standard
+                defaults.set(savedData, forKey: "people")
+                
+            }
+            
+            func loadAppData() {
+                let defaults = UserDefaults.standard
+                if let savedPeople = defaults.object(forKey: "people") as? Data {
+                    people = NSKeyedUnarchiver.unarchiveObject(with: savedPeople) as? [Person] ?? [Person]()
+                }
+            }
+
+            class Person: NSObject, NSCoding {
+                var name: String
+                var image:  String
+                
+                init(name: String, image: String) {
+                    self.name = name
+                    self.image = image
+                }
+                        
+                required init?(coder aDecoder: NSCoder) {
+                    name = aDecoder.decodeObject(forKey: "name") as! String
+                    image = aDecoder.decodeObject(forKey: "image") as! String
+                }
+                
+                func encode(with aCoder: NSCoder) {
+                    aCoder.encode(name, forKey: "name")
+                    aCoder.encode(image, forKey: "image")
+                }
+            }
+
+    31) b) Codable (only for Swift) (Work for both Class & Struct) (reads and writes JSON natively.)
+
+32) Write Image to PhotoAlbum: (pro13)
+        UIImageWriteToSavedPhotosAlbum(imageView.image!, self, #selector(image(_: didFinishSavingWithError: contextInfo:)), nil)
+
+        @objc func image(_ image: UIImage, didFinishSavingWithError error: Error?, contextInfo: UnsafeRawPointer)  {
+            if let error = error {
+                //we got back an error
+                let ac = UIAlertController(title: "Save error", message: error.localizedDescription, preferredStyle: .alert)
+                ac.addAction(UIAlertAction(title: "OK", style: .default))
+                present(ac, animated: true)
+            }else {
+                let ac = UIAlertController(title: "Save ok!", message: "Your image has been saved to photos", preferredStyle: .alert)
+                ac.addAction(UIAlertAction(title: "OK", style: .default))
+                present(ac, animated: true)
+            }
+        }
+
+33) Animation (pro15)
+        UIView.animate(withDuration: 1, delay: 0,usingSpringWithDamping: 0.5, initialSpringVelocity: 5, options: [], animations: { [unowned self] in 
+            //closure for animation here 
+            CGAffineTransform //structure that represents a specific kind of transform that we can apply to any UIView object or subclass
+        }){[unowned self] (finished: Bool) in   
+            //closure call after finishing animation
+        }
+
+
+34) NotificationCenter (pro16) - Observe Event
+    Behind the scenes, iOS is constantly sending out notifications when things happen – keyboard changing, application moving to the background, as well as any custom events that applications post. We can add ourselves as an observer for certain notifications and a method we name will be called when the notification occurs, and will even be passed any useful information.
+        //addObserver() method, which takes four parameters: the object that should receive notifications (it's self), the method that should be called, the notification we want to receive, and the object we want to watch. We're going to pass nil to the last parameter, meaning "we don't care who sends the notification."
+
+        let notificationCenter = NotificationCenter.default
+        notificationCenter.addObserver(self, selector: #selector(method), name: Notification.Name.UIKeyboardWillHide, object: nil)
+        
+35) Debugging (pro18)
+        assert(1 == 1, "Maths failure!")
+        assert(1 == 2, "Maths failure!") => will cause the app to crash, and print "Maths failure!"
+
+        Breakpoint:
+            F6 -> Step Over - execution by one line
+            Ctrl+Cmd+Y -> continue executing program until hit another breakpoint
+            right click on breakpoint to set condition
+
+        Exception Breakpoint: - breakpoints can do is be automatically triggered when an exception is thrown
+            cmd + 8 -> bottom-left + -> Exception Breakpoint ...
+
+
+36) MapKit (pro19)
+
+37) Local Notifications (pro21) -  Send reminders, prompts and alerts even when your app isn't running
+    local notifications let you send reminders to your user's lock screen to show them information when your app isn't running. If you set a reminder in your calendar, making it pop up on your lock screen at the right time is a local notification
+
+    - Request permission
+        import UserNotifications
+        func registerLocal() {
+            let center = UNUserNotificationCenter.current()            
+            center.requestAuthorization(options: [.alert, .badge, .sound]){ (granted, error) in
+                if granted {
+                    print("User grant permission to use NotificationCenter")
+                }else{
+                    print("User reject request to use NotificationCenter")
+                }
+            }
+        }
+
+    - Set notification
+        class ViewController: UIViewController, UNUserNotificationCenterDelegate
+
+        func registerCategories() {
+            let center = UNUserNotificationCenter.current()
+            center.delegate = self
+            
+            //create button “Show me more…”, that will cause the app to launch when tapped
+            let show = UNNotificationAction(identifier: "show", title: "Tell me more ...", options: .foreground)
+            let category = UNNotificationCategory(identifier: "alarm", actions: [show], intentIdentifiers: [])
+            
+            center.setNotificationCategories([category])
+        }
+
+        func scheduleLocal(){
+            registerCategories();
+
+            let center = UNUserNotificationCenter.current()
+
+            let content = UNMutableNotificationContent()
+            content.title = "Late wake up call"
+            content.body = "The early bird catches the worm, but the second mouse gets the cheese."
+            content.categoryIdentifier = "alarm"
+            content.userInfo = ["customData": "fizzbuzz"]
+            content.sound = UNNotificationSound.default()
+
+            //everyday at 10:30
+            var dateComponents = DateComponents()
+            dateComponents.hour = 10
+            dateComponents.minute = 30
+            let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
+
+            let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+            center.add(request)
+        }
+
+        //implement the didReceive method for the notification center
+        func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+            let userInfo = response.notification.request.content.userInfo
+            
+            if let customData = userInfo["customData"] as? String{
+                print("Custom data recieved: \(customData)")
+                
+                switch response.actionIdentifier {
+                case UNNotificationDefaultActionIdentifier: //gets sent when the user swiped on the notification to unlock their device and launch the app
+                    print("Default identifier")
+                    break
+                case "show":
+                      print("Show more information…") //click on show button
+                    break
+                default:
+                    break
+                }
+            }
+            
+            // you must call the completion handler when you're done
+            completionHandler()
+        }
+        
+
+    - Cancel Pending Notification - pending notifications - notifications you have scheduled that have yet to be delivered because their trigger hasn’t been met
+        center.removeAllPendingNotificationRequests()
+
+    - Trigger with interval of time
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 5, repeats: false)
+
+
+
+
+
+
+
+
+
+
+
+
+
