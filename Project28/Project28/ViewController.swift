@@ -36,7 +36,7 @@ class ViewController: UIViewController {
         
     }
     
-    func adjustForKeyboard(notification: Notification) {
+    @objc func adjustForKeyboard(notification: Notification) {
         //The adjustForKeyboard() method is complicated, but that's because it has quite a bit of work to do. First, it will receive a parameter that is of type Notification. This will include the name of the notification as well as a Dictionary containing notification-specific information called userInfo.
         let userInfo = notification.userInfo!
         
@@ -104,16 +104,16 @@ class ViewController: UIViewController {
         secret.isHidden = false
         title = "Secret stuff!"
         
-        if let text = KeychainWrapper.standardKeychainAccess().string(forKey: "SecretMessage")
+        if let text = KeychainWrapper.standard.string(forKey: "SecretMessage")
         {
             secret.text = text
         }
     }
     
-    func saveSecretMsg() {
-        if (!secret.isHidden){
-            _ = KeychainWrapper.standardKeychainAccess().setString(secret.text, forKey: "SecretMessage")
-            secret.resignFirstResponder()   //tell our text view that we're finished editing it, so the keyboard can be hidden
+    @objc func saveSecretMsg() {
+        if !secret.isHidden {
+            _ = KeychainWrapper.standard.set(secret.text, forKey: "SecretMessage")
+            secret.resignFirstResponder() //tell our text view that we're finished editing it, so the keyboard can be hidden
             secret.isHidden = true
             title = "Nothing to see here"
         }

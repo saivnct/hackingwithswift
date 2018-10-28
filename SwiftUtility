@@ -284,13 +284,14 @@ Fix Xcode: limits of free developer accounts
             }
         }
 
-33) Animation (pro15)
+33)a) Animation (pro15) - Core Animation 
         UIView.animate(withDuration: 1, delay: 0,usingSpringWithDamping: 0.5, initialSpringVelocity: 5, options: [], animations: { [unowned self] in 
             //closure for animation here 
             CGAffineTransform //structure that represents a specific kind of transform that we can apply to any UIView object or subclass
         }){[unowned self] (finished: Bool) in   
             //closure call after finishing animation
         }
+33)b) Core Graphics (pro27)- responsible for device-independent 2D drawing – when you want to draw shapes, paths, shadows, colors or so on,
 
 
 34) NotificationCenter (pro16) - Observe Event
@@ -398,8 +399,13 @@ Fix Xcode: limits of free developer accounts
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 5, repeats: false)
 
 
+38) Extension: Swift extensions are the smart way to add functionality to existing types
+	https://github.com/pNre/ExSwift
 
+39) Sharing data peer-2-peer (pro25)
 
+40) Save user data securely using the device keychain and Touch ID (pro28)
+	import LocalAuthentication
 
 
 

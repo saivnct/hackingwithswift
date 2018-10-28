@@ -46,14 +46,14 @@ class ViewController: UICollectionViewController, UINavigationControllerDelegate
         mcSession.delegate = self
     }
     
-    func importPicture() {
+    @objc func importPicture() {
         let picker = UIImagePickerController()
         picker.allowsEditing = true
         picker.delegate = self
         present(picker, animated: true)
     }
     
-    func showConnectionPrompt()  {
+    @objc func showConnectionPrompt()  {
         let ac = UIAlertController(title: "Connect to others", message: nil, preferredStyle: .actionSheet)
         ac.addAction(UIAlertAction(title: "Host a session", style: .default, handler: startHosting))
         ac.addAction(UIAlertAction(title: "Join a session", style: .default, handler: joinSession))
@@ -64,6 +64,7 @@ class ViewController: UICollectionViewController, UINavigationControllerDelegate
     
     //MARK: - UIAlertController handler
     func startHosting(action:UIAlertAction) {
+        //Most important of all is that all multipeer services on iOS must declare a service type, which is a 15-digit string that uniquely identify your service. Those 15 digits can contain only the letters A-Z, numbers and hyphens, and it's usually preferred to include your company in there somehow
         mcAdvertiserAssistant = MCAdvertiserAssistant(serviceType: "hws-project25", discoveryInfo: nil, session: mcSession)
         mcAdvertiserAssistant.start()
     }
@@ -145,7 +146,7 @@ class ViewController: UICollectionViewController, UINavigationControllerDelegate
     }
     
     //not important  method
-    func session(_ session: MCSession, didFinishReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, at localURL: URL, withError error: Error?) {
+    func session(_ session: MCSession, didFinishReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, at localURL: URL?, withError error: Error?) {
         
     }
     

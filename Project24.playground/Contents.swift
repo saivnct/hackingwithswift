@@ -16,30 +16,48 @@ extension Int {
         return self + 1
     }
     
+    //Swift doesn't let you modify self inside an extension by default
+    //Swift forces you to declare the method mutating, meaning that it will change its input
     mutating func increaseOne() {   //Swift forces you to declare the method mutating, meaning that it will change its input
         self += 1
     }
 }
 
+var myInt = 10
+myInt.increaseOne()
+myInt
+
+//Once you have declared a method as being mutating, Swift knows it will change values so it won't let you use it with constants
+let otherInt = 10
+//otherInt.increaseOne()
+//otherInt
 
 //we want squared() to apply to all types of integer, we can’t very well make it return Int - that’s not big enough to hold the full range of a UInt64, so Swift will refuse to build. Instead, we need to make the method return Self, which means “I’ll return whatever data type I was used with.”
 //This time I’ve made it apply to Integer, which is the protocol applied to Int, Int8, UInt64, and so on. This means all integer types get access to the squared() method, and work as expected.
-extension Integer {
-    
-    func squared() -> Self {
+extension Int {
+
+    func squared() -> Int {
         return self * self
     }
 }
 
-var str = "Hello, playground"
-var myInt = 10
-myInt.plusOne() //unchanged value
-myInt
-myInt.increaseOne() //changed value
-myInt
 
-let otherInt = 10
-//otherInt.increaseOne() //this will fail because Swift won't let you modify constants
-
-let i: UInt = 8
+let i: Int = 8
 i.squared()
+
+
+//Our extension modifies the Int data type specifically, rather than all variations of integers, which means code like this won’t work because UInt64 doesn’t have the extension
+//let j: UInt64 = 8
+//print(j.squared())
+
+
+
+//This time I’ve made it apply to BinaryInteger, which is the protocol applied to Int, Int8, UInt64, and so on. This means all integer types get access to the squared() method
+extension BinaryInteger {
+    func squared() -> Self { //self means “my current value” and Self means “my current data type.”
+        return self * self
+    }
+}
+
+let j: UInt64 = 8
+print(j.squared())

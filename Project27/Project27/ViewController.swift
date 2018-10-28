@@ -34,7 +34,7 @@ class ViewController: UIViewController {
         //In Core Graphics, a context is a canvas upon which we can draw, but it also stores information about how we want to draw (e.g., what should our line thickness be?) and information about the device we are drawing to. So, it's a combination of canvas and metadata all in one, and it's what you'll be using for all your drawing. This Core Graphics context is exposed to us when we render with UIGraphicsImageRenderer.
         //When you create a renderer, you get to specify how big it should be, whether it should be opaque or not, and what pixel to point scale you want. To kick off rendering you can either call the image() function to get back a UIImage of the results, or call the pngData() and jpegData() methods to get back a Data object in PNG or JPEG format respectively.
         
-        let renderer = UIGraphicsImageRenderer(size: CGSize(width: 521, height: 521))   //we create a UIGraphicsImageRenderer with the size 512x512, leaving it with default values for scale and opacity – that means it will be the same scale as the device (e.g. 2x for retina) and transparent
+        let renderer = UIGraphicsImageRenderer(size: CGSize(width: 512, height: 512))   //we create a UIGraphicsImageRenderer with the size 512x512, leaving it with default values for scale and opacity – that means it will be the same scale as the device (e.g. 2x for retina) and transparent
         
         
         //Creating the renderer doesn’t actually start any rendering – that’s done in the image() method. This accepts a closure as its only parameter, which is code that should do all the drawing. It gets passed a single parameter that I’ve named ctx, which is a reference to a UIGraphicsImageRendererContext to draw to. This is a thin wrapper around another data type called CGContext, which is where the majority of drawing code lives.
@@ -48,7 +48,7 @@ class ViewController: UIViewController {
                 //4. addRect() adds a CGRect rectangle to the context's current path to be drawn.
                 //5. drawPath() draws the context's current path using the state you have configured
             //All five of those are called on the Core Graphics context that comes from ctx.cgContext, using a parameter that does the actual work. So for setting colors the parameter is the color to set (remember how to convert UIColor values to CGColor values? I hope so!), for setting the line width it's a number in points, for adding a rectangle path it's the CGRect of your rectangle, and for drawing it's a special constant that says whether you want just the fill, just the stroke, or both.
-            let rectangle = CGRect(x: 5, y: 5, width: 502, height: 502)
+            let rectangle = CGRect(x: 0, y: 0, width: 512, height: 512)
             
             ctx.cgContext.setFillColor(UIColor.red.cgColor)
             ctx.cgContext.setStrokeColor(UIColor.black.cgColor)
@@ -67,6 +67,8 @@ class ViewController: UIViewController {
         let renderer = UIGraphicsImageRenderer(size: CGSize(width: 512, height: 512))
         
         let img = renderer.image(){ctx in
+            //the stroke is centered on the edge of the path, meaning that a 10 point stroke is 5 points inside the path and 5 points outside
+            //The rectangle being used to define our circle is the same size as the whole context, meaning that it goes edge to edge – and thus the stroke gets clipped
             let rectangle = CGRect(x: 5, y: 5, width: 502, height: 502)
             
             ctx.cgContext.setFillColor(UIColor.red.cgColor)
@@ -80,6 +82,8 @@ class ViewController: UIViewController {
         imgView.image = img
     }
     
+    
+    //A different way of drawing rectangles is just to fill them directly with your target color.
     func drawCheckerboard() {
         let renderer = UIGraphicsImageRenderer(size: CGSize(width: 512, height: 512))
         

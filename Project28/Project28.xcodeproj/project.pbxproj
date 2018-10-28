@@ -12,8 +12,8 @@
 		A3A4B2B61F2C677700FF441B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A3A4B2B41F2C677700FF441B /* Main.storyboard */; };
 		A3A4B2B81F2C677700FF441B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A3A4B2B71F2C677700FF441B /* Assets.xcassets */; };
 		A3A4B2BB1F2C677700FF441B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A3A4B2B91F2C677700FF441B /* LaunchScreen.storyboard */; };
-		A61A1E301F45E55200566B0E /* KeychainOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A61A1E2E1F45E55200566B0E /* KeychainOptions.swift */; };
 		A61A1E311F45E55200566B0E /* KeychainWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A61A1E2F1F45E55200566B0E /* KeychainWrapper.swift */; };
+		A637B1FF2184E08F0004E33E /* KeychainItemAccessibility.swift in Sources */ = {isa = PBXBuildFile; fileRef = A637B1FE2184E08F0004E33E /* KeychainItemAccessibility.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,8 +24,8 @@
 		A3A4B2B71F2C677700FF441B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A3A4B2BA1F2C677700FF441B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A3A4B2BC1F2C677700FF441B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		A61A1E2E1F45E55200566B0E /* KeychainOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeychainOptions.swift; sourceTree = "<group>"; };
 		A61A1E2F1F45E55200566B0E /* KeychainWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeychainWrapper.swift; sourceTree = "<group>"; };
+		A637B1FE2184E08F0004E33E /* KeychainItemAccessibility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainItemAccessibility.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,8 +72,8 @@
 		A61A1E2D1F45E54100566B0E /* utils */ = {
 			isa = PBXGroup;
 			children = (
-				A61A1E2E1F45E55200566B0E /* KeychainOptions.swift */,
 				A61A1E2F1F45E55200566B0E /* KeychainWrapper.swift */,
+				A637B1FE2184E08F0004E33E /* KeychainItemAccessibility.swift */,
 			);
 			name = utils;
 			sourceTree = "<group>";
@@ -153,7 +153,7 @@
 			files = (
 				A3A4B2B31F2C677700FF441B /* ViewController.swift in Sources */,
 				A61A1E311F45E55200566B0E /* KeychainWrapper.swift in Sources */,
-				A61A1E301F45E55200566B0E /* KeychainOptions.swift in Sources */,
+				A637B1FF2184E08F0004E33E /* KeychainItemAccessibility.swift in Sources */,
 				A3A4B2B11F2C677700FF441B /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
