@@ -5,7 +5,7 @@
 //  Created by Giang Bb on 10/29/18.
 //  Copyright © 2018 Giang Bb. All rights reserved.
 //
-
+import CloudKit
 import UIKit
 
 class SubmitViewController: UIViewController {
@@ -71,7 +71,8 @@ class SubmitViewController: UIViewController {
     }
     
     @objc func doneTapped() {
-        _ = navigationController?.popToRootViewController(animated: true)
+        _ = navigationController?.popToRootViewController(animated: true) //pops off all the view controllers on a navigation controller's stack, returning us to the original view controller - in our case, that's the "What's that Whistle?" screen with the + button
+        //assign the result of popToRootViewController() to _, which is Swift’s way of saying “ignore this thing.” This silences an “unused result” warning, because although this method returns the array of view controllers that got removed, we don’t care about that, so we can throw it away
     }
 
 }
