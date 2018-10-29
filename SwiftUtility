@@ -28,6 +28,12 @@ Fix Xcode: limits of free developer accounts
 		navigationController?.navigationBar.prefersLargeTitles = true
 		navigationItem.largeTitleDisplayMode = .never
 
+3)a) Add buttons to action navigation bar
+		let add = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addWebview))
+        let delete = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(deleteWebview))
+        navigationItem.rightBarButtonItems = [delete,add]
+
+
 
 
 4) Create Alert notification
@@ -65,7 +71,16 @@ Fix Xcode: limits of free developer accounts
         NOTE: remember to set permission in Info.plist:
         -> Add -> Privacy - Photo Library Additions Usage Description -> String: "We need to save photos you like"
 
-8) Webview (pro 4)
+8) Webview (pro 4) (pro 31) (pro 32)
+	UIWebView (pro31)
+	WKWebView (pro4)
+	SFSafariViewController (pro32)
+
+	NOTE: 
+		problem with UIWebView & WKWebView -  For example, we would do this either with UIWebView or WKWebView, adding our own user interface to handle navigation. But this had a few problems: everyone's user interface was different, features such as cookies and Auto Fill were unavailable for security reasons
+
+		Apple fixed all these problems in iOS 9 using a new class called SFSafariViewController, which effectively embeds all of Safari inside your app using an opaque view controller. That is, you can't style it, you can't interact with it, and you certainly can't pull any private data out of it, and as a result SFSafariViewController can take advantage of the user's secure web data in ways that UIWebView and WKWebView never could
+
 
 9) Read from file (pro 5)
 		var allWords = [String] ()
@@ -407,11 +422,109 @@ Fix Xcode: limits of free developer accounts
 40) Save user data securely using the device keychain and Touch ID (pro28)
 	import LocalAuthentication
 
+41) MultiTasking (pro31) 
+	NOTE: multi tasking only available on ipad
+
+42) Open HTTP page
+	https://www.hackingwithswift.com/example-code/system/how-to-handle-the-https-requirements-in-ios-with-app-transport-security
+	https://www.hackingwithswift.com/example-code/wkwebview/how-to-load-http-content-in-wkwebview-and-uiwebview
+
+43) Handling Touch event		
+	let webView = UIWebView()
+
+	let recognizer = UITapGestureRecognizer(target: self, action: #selector(webViewTapped))
+	recognizer.delegate = self
+	webView.addGestureRecognizer(recognizer)
+
+	@objc func webViewTapped(_ regconizer: UITapGestureRecognizer)  {
+        if let selectedWebView = regconizer.view as? UIWebView {
+            selectWebview(selectedWebView)
+        }
+    }
+
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+	    return true
+	}
+
+44) TextField event presses Return on keyboard
+	implement UITextFieldDelegate
+	var addressBar: UITextField
+
+	addressBar.delegate = self
+
+	func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        if let address = addressBar.text {
+            print(address)
+        }
+        
+        textField.resignFirstResponder()    //call resignFirstResponder() on the text field so that the keyboard hides
+        return true
+    }
+
+45) StackView (pro31)
+
+46) Custom string with NSAttributedStringKey
+	func makeAttributedString(title: String, subtitle: String) -> NSAttributedString {
+	    let titleAttributes = [NSAttributedStringKey.font: UIFont.preferredFont(forTextStyle: .headline), NSAttributedStringKey.foregroundColor: UIColor.purple]
+	    let subtitleAttributes = [NSAttributedStringKey.font: UIFont.preferredFont(forTextStyle: .subheadline)]
+
+	    let titleString = NSMutableAttributedString(string: "\(title)\n", attributes: titleAttributes)
+	    let subtitleString = NSAttributedString(string: subtitle, attributes: subtitleAttributes)
+
+	    titleString.append(subtitleString)
+
+	    return titleString
+	}
+
+47) Add Core Spotlight to index app content (pro32)
+	apps can ask for their content to be shown in the Spotlight search results and, if the user taps one of those search results, the app gets launched and told what was tapped so it can load the right content.
+
+	import CoreSpotlight
+	import MobileCoreServices
 
 
+48) Set Table View in Editing mode (pro32)
+		tableView.isEditing = true
+        tableView.allowsSelectionDuringEditing = true //When a table is in editing mode, you can't tap the cells any more -> we can just set the allowsSelectionDuringEditing property to true to fix this
+
+        override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+		        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
+		        
+		        let project = projects[indexPath.row]
+		        cell.textLabel?.attributedText = makeAttributedString(title: "title", subtitle: "subtitle")
+		        
+		        
+		        if favorites.contains(indexPath.row){
+		            cell.editingAccessoryType = .checkmark
+		        }else{
+		            cell.editingAccessoryType = .none
+		        }
+		        
+		        return cell        
+		    }
+
+        override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
+	        if favorites.contains(indexPath.row){
+	            return .delete
+	        }else{
+	            return .insert
+	        }
+	        //If you run the app now all the rows will have a green + symbol to their left and no checkmark on the right, because no projects have been marked as a favorite. If you click the + nothing will happen, because we haven't told the app what to do in that situation. To make this work, we need to handle the tableView(_:commit:forRowAt:) method, checking whether the user is trying to insert or delete their favorite.
+	    }
+
+    	 override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+		        if editingStyle == .insert {
+		            
+		        }else{
+		            
+		        }
+		        
+		        tableView.reloadRows(at: [indexPath], with: .none)
+		        
+		    }
+
+49) CloudKit -CloudKit lets you send and retrieve remote data for your app, effectively providing a server back-end for your app to talk to. Even better, unless you go over Apple's new generous limits, it's completely free (pro33)
 
 
-
-
-
-
+50) Recording audio (pro33)
+	import AVFoundation

@@ -64,6 +64,12 @@ class ViewController: UIViewController, UIWebViewDelegate, UITextFieldDelegate, 
         addressBar.text = webView.request?.url?.absoluteString ?? ""
     }
     
+    @objc func webViewTapped(_ regconizer: UITapGestureRecognizer)  {
+        if let selectedWebView = regconizer.view as? UIWebView {
+            selectWebview(selectedWebView)
+        }
+    }
+    
     func selectWebview(_ webView: UIWebView) {
         //The selectWebView() method is straightforward: it needs to loop through the array of web views belonging to the stack view, updating each of them to have a zero-width border line, then set the newly selected one to have a border width of three points
         for view in stackView.arrangedSubviews {
@@ -111,12 +117,8 @@ class ViewController: UIViewController, UIWebViewDelegate, UITextFieldDelegate, 
         }
     }
     
-    @objc func webViewTapped(_ regconizer: UITapGestureRecognizer)  {
-        if let selectedWebView = regconizer.view as? UIWebView {
-            selectWebview(selectedWebView)
-        }
-    }
-    
+
+    //MARK: -IMPLEMENT UIWebViewDelegate
     func webViewDidFinishLoad(_ webView: UIWebView) {
         if webView == activeWebView {
             updateUI(for: webView)

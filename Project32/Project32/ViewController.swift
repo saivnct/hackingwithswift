@@ -15,7 +15,6 @@ import SafariServices
 import CoreSpotlight
 import MobileCoreServices
 
-
 import UIKit
 
 class ViewController: UITableViewController {
