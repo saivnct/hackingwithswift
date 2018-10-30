@@ -12,14 +12,80 @@ Fix Xcode: limits of free developer accounts
 
 
 
-1) Shuffle element with random position in an array (using GameplayKit):
+1) Shuffling an array with GameplayKit:
 	import GameplayKit
 	var countries: [String]
 	GKRandomSource.sharedRandom().arrayByShufflingObjects(in: countries) as! [String]
 
-2) Get random int number range 0-3:
-	import GameplayKit
-	GKRandomSource.sharedRandom().nextInt(upperBound: 3)
+    let lotteryBalls = [Int](1...49)
+    let shuffledBalls = GKRandomSource.sharedRandom().arrayByShufflingObjects(in: lotteryBalls)
+    print(shuffledBalls[0])
+    print(shuffledBalls[1])
+    print(shuffledBalls[2])
+    print(shuffledBalls[3])
+    print(shuffledBalls[4])
+    print(shuffledBalls[5])
+
+
+2a) Generating random numbers without GameplayKit
+        let int1 = Int.random(in: 0...10)
+        let int2 = Int.random(in: 0..<10)
+        let double1 = Double.random(in: 1000...10000)
+        let float1 = Float.random(in: -100...100)
+
+2b) Generating random numbers with GameplayKit - GameplayKit does have the advantage that you can shape its random output
+    	import GameplayKit
+        //produces a number between -2,147,483,648 and 2,147,483,647
+        GKRandomSource.sharedRandom().nextInt()
+    	GKRandomSource.sharedRandom().nextInt(upperBound: 3)
+        GKRandomSource.sharedRandom().nextUniform()
+        GKRandomSource.sharedRandom().nextBool()
+
+        //GameplayKit has three sources of random numbers
+            //1. GKLinearCongruentialRandomSource: has high performance but the lowest randomness
+            //2. GKMersenneTwisterRandomSource: has high randomness but the lowest performance
+            //3. GKARC4RandomSource: has good performance and good randomness – in the words of Apple, "it's going to be your Goldilocks random source."
+
+        //Apple recommends you force flush its ARC4 random number generator before using it for anything important, otherwise it will generate sequences that can be guessed to begin with. Apple suggests dropping at least the first 769 values, so I suspect most coders will round up to the nearest pleasing value: 1024. To drop values, use this code
+        arc4.dropValues(1024)
+
+
+2c) GameplayKit random distributions
+    This is very similar to Swift’s Int.random(in:) method, but using GameplayKit means you can create the random distribution as a property then re-use it again and again without having to specify the range each time
+
+        let d6 = GKRandomDistribution.d6()  //generating a random number between 1 and 6
+        d6.nextInt()
+
+        let d20 = GKRandomDistribution.d20()    //generating a random number between 1 and 20
+        d20.nextInt()
+
+        let crazy = GKRandomDistribution(lowestValue: 1, highestValue: 11539) //generating a random number between 1 and 11539
+        crazy.nextInt()
+
+        //When you create a random distribution in this way, iOS automatically creates a random source for you using an unspecified algorithm. If you want one particular random source, there are special constructors for you
+        let rand = GKMersenneTwisterRandomSource()
+        let distribution = GKRandomDistribution(randomSource: rand, lowestValue: 10, highestValue: 20)
+        print(distribution.nextInt())
+
+        //using GKRandomDistribution to shape a random source, either created automatically or specified in its constructor. GameplayKit provides two other distributions: GKShuffledDistribution ensures that sequences repeat less frequently, and GKGaussianDistribution ensures that your results naturally form a bell curve where results near to the mean average occur more frequently
+        //GKShuffledDistribution - This is an anti-clustering distribution, which means it shapes the distribution of random numbers so that you are less likely to get repeats. This means it will go through every possible number before you see a repeat, which makes for a truly perfect distribution of numbers
+        let shuffled = GKShuffledDistribution.d6()
+        print(shuffled.nextInt())
+        print(shuffled.nextInt())
+        print(shuffled.nextInt())
+        print(shuffled.nextInt())
+        print(shuffled.nextInt())
+        print(shuffled.nextInt())
+
+        //GKGaussianDistribution (tip: "Gauss" rhymes with "House"), which causes the random numbers to bias towards the mean average of the range. So if your range is from 0 to 20, you'll get more numbers like 10, 11 and 12, fewer numbers like 8, 9, 13 and 14, and decreasing amounts of any numbers outside that.
+        let shuffled2 = GKGaussianDistribution.d6()
+        print(shuffled2.nextInt())
+        print(shuffled2.nextInt())
+        print(shuffled2.nextInt())
+        print(shuffled2.nextInt())
+        print(shuffled2.nextInt())
+        print(shuffled2.nextInt())
+
 
 3) Set Title for ActionBar of ViewController
 		title = "title"
@@ -528,3 +594,62 @@ Fix Xcode: limits of free developer accounts
 
 50) Recording audio (pro33)
 	import AVFoundation
+
+
+51) Core Data (pro38)
+    Core Data is responsible for reading data from a persistent store (the SQLite database) and making it available for us to use as objects. After changing those objects, we can save them back to the persistent store, which is when Core Data converts them back from objects to database records
+
+    Almost everyone uses SQLite. SQLite is a very small, very fast, and very portable database engine, and what Core Data does is provide a wrapper around it: when you read, write and query a managed object context, Core Data translates that into Structured Query Language (SQL) for SQLite to parse
+
+    a) Designing a Core Data model - A data model is a description of the data you want Core Data to store, and is a bit like creating a class in Swift. But Core Data takes it a step further by allowing you to describe how its entities relate to other entities, as well as adding rules for validation and uniqueness
+        To create a data model, choose File > New > File and select iOS > Core Data > Data Model. Name it Project38, then make sure the "Group" option near the bottom of the screen has a yellow folder to it rather than a blue project icon. > Add Entity 
+        A Core Data "entity" is like a Swift class in that it is just a description of what an object is going to look like. > Alt+Cmd+3 > Set Name
+        > Add Attribute
+        Attributes are just like properties on a Swift class
+        
+
+
+
+    b) Adding Core Data to our project: NSPersistentContainer   
+
+    c) Creating an NSManagedObject subclass 
+        C1: 
+        Project38.xcdatamodelid > Alt+Cmd+3 > Codegen > Class Definition > Cmd + B (Xcode converted the Core Data entity into a Swift class)
+
+        C2:
+        Project38.xcdatamodelid > Alt+Cmd+3 > Codegen > Manual/None
+        Project38.xcdatamodelid > menu Editor >  Create NSManagedObject Subclass > look next to Group and make sure you see a yellow folder next to "Project 38" rather than a blue project icon, and click Create
+
+    d) Loading Core Data objects using NSFetchRequest and NSSortDescriptor
+        NSFetchRequest - This is the class that performs a query on your data, and returns a list of objects that matc
+
+    e) Add fetch index
+        An indexed attribute is one that is optimized for fast searching. There is a cost to creating and maintaining each index, which means you need to choose carefully which attributes should be index. But when you find a particular fetch request is happening slowly, chances are it's because you need to index an attribute.
+
+        > long click on Add Entity > Add Fetch Index > set Property = "name" 
+    f) using NSPredicate to filter NSFetchRequest    
+
+    g) Adding Core Data entity relationships: lightweight vs heavyweight migration
+
+    h) delete a Core Data object
+
+    i) Optimizing Core Data Performance using NSFetchedResultsController
+
+52) Array filter (pro39)
+    var allWords = [String]()
+    allWords = allWords.filter { $0 != "" }
+
+    filteredWords = allWords.filter { self.wordCounts.count(for: $0) >= userNumber }
+    filteredWords = allWords.filter { $0.range(of: input, options: .caseInsensitive) != nil }
+
+53) Array sorted (pro39)    
+    wordCounts = NSCountedSet(array: allWords) ////creates a counted set from all the words, which
+     immediately de-duplicates and counts them all
+    let sorted = wordCounts.allObjects.sorted { wordCounts.count(for: $0) > wordCounts.count(for: $1) }
+    allWords = sorted as! [String]
+
+
+
+
+
+
